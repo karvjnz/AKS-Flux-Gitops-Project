@@ -26,12 +26,3 @@ Developer → Docker → Azure Container Registry → GitHub → Flux → AKS �
 5. Flux CD (GitOps)
 6. GitHub
 7. Python (Flask App)
-
-
-echo "# AKS-Flux-Gitops-Project" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/karvjnz/AKS-Flux-Gitops-Project.git
-git push -u origin main
