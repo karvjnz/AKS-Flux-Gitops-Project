@@ -1,0 +1,139 @@
+🚀 AKS + Flux GitOps Project
+=============================
+
+Project Description:
+====================
+Built an end-to-end DevOps pipeline using Docker, Azure Kubernetes Service (AKS), and Flux GitOps. 
+Automated deployments from GitHub to Kubernetes using GitHub Actions and Flux, ensuring continuous delivery and scalability.
+End-to-End CI/CD Pipeline using Docker, Azure & Kubernetes
+
+📌 Overview
+===========
+This project demonstrates a complete DevOps pipeline using:
+
+• Docker for containerization
+• Azure Container Registry (ACR) for image storage
+• Azure Kubernetes Service (AKS) for orchestration
+• Flux CD for GitOps-based deployment
+• GitHub Actions for CI/CD automation
+
+👉 Any code change pushed to GitHub is automatically:
+
+• Built into a Docker image
+• Pushed to ACR
+• Deployed to AKS via Flux
+
+
+🧭 Architecture Diagram
+
+Developer → GitHub → GitHub Actions → ACR → Flux → AKS → Users
+
+
+⚙️ Tech Stack:
+
+Category			Tools
+
+Containerization	Docker
+Cloud				Azure
+Orchestration		Kubernetes (AKS)
+GitOps				Flux CD
+CI/CD				GitHub Actions
+Language			Python (Flask)
+
+
+📂 Project Structure
+project-root/
+│
+├── app/                        # Application source code
+│   ├── app.py                  # Flask app
+│   ├── requirements.txt        # Dependencies
+│   └── Dockerfile              # Container config
+│
+├── k8s/                        # Kubernetes manifests
+│   ├── deployment.yaml
+│   └── service.yaml
+│
+└── gitops-repo/                # Flux GitOps repo
+    └── clusters/
+        └── my-cluster/
+            ├── deployment.yaml
+            └── service.yaml
+			
+
+🐳 Docker Setup
+
+• Build Image
+docker build -t myapp:v1 .
+
+• Run Locally
+docker run -p 5000:5000 myapp:v1
+
+☁️ Azure Setup
+• Push Image to ACR
+az acr login --name <acr-name>
+
+docker tag myapp:v1 <acr-name>.azurecr.io/myapp:v1
+docker push <acr-name>.azurecr.io/myapp:v1
+
+☸️ Kubernetes Deployment
+• Apply Manifests
+
+kubectl apply -f k8s/deployment.yaml
+kubectl apply -f k8s/service.yaml
+
+🔁 GitOps with Flux
+• Bootstrap Flux
+flux bootstrap github \
+  --owner=<username> \
+  --repo=aks-gitops \
+  --branch=main \
+  --path=./clusters/my-cluster \
+  --personal
+
+👉 Flux continuously syncs Git → AKS
+
+🔁 CI/CD with GitHub Actions
+• Workflow File
+.github/workflows/docker-build.yml
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: ACR Login
+      run: az acr login --name <acr-name>
+
+    - name: Build Image
+      run: docker build -t <acr-name>.azurecr.io/myapp:${{ github.sha }} ./app
+
+    - name: Push Image
+      run: docker push <acr-name>.azurecr.io/myapp:${{ github.sha }}
+
+🔄 End-to-End Workflow
+1. Developer pushes code to GitHub
+2. GitHub Actions builds Docker image
+3. Image pushed to ACR
+4. GitOps repo updated
+5. Flux detects changes
+6. AKS deploys automatically
+
+⚡ Key Features
+✅ Fully automated CI/CD pipeline
+✅ GitOps-based deployment
+✅ Zero-downtime rolling updates
+✅ Scalable Kubernetes deployment
+✅ Cloud-native architecture
